@@ -3,31 +3,9 @@
 ## From the Basics of R coding to Advanced Machine Learning
 ## May 18 and 19, 2016,  Sidra Research
 ##
-## David Furman (dfurman@sidra.org)
+## David Furman (dfurman@sidra.org) & Wouter Hendrickx (whendrickx@sidra.org)
 ## Research, Translational Medicine, Sidra Medical and Research Institute
 ###############################################################################
-
-##R packages (or R libraries)
-#To install a package...
-#...in RStudio click Tools -> Install packages...
-#...in the console run:
-#install.packages("RMySQL")
-#To load a package
-#library("RMySQL")
-
-#Install a package from bioconductor
-#source("http://bioconductor.org/biocLite.R")
-#biocLite("gplots")
-
-
-
-###############################################################################
-###############################################################################
-##Check the working directory
-getwd()
-##Set the working directlory
-#setwd("/User/.../MyRproject")
-
 
 
 ###############################################################################
