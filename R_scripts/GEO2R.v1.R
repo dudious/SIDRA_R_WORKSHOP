@@ -7,6 +7,18 @@
 ##
 #########################################################
 
+## install R
+## in windows add proper securety setting to R
+
+## install Git
+
+## install R studio
+
+## in WINDOWS SET environmental variable
+## System variable 
+## R_USER = %USERPROFILE%
+
+
 # Setup environment
 rm(list=ls())
 setwd("~/Dropbox/R course/WD/")
@@ -25,9 +37,11 @@ lapply(required.packages, library, character.only = TRUE)
 lapply(required.biocLite.packages, library, character.only = TRUE)
 
 # Download the GEO file and load in R
-GSE5327.file <- getGEOfile("GSE5327",destdir = getwd())
-GSE5327 <- getGEO(filename = GSE5327.file,GSEMatrix=TRUE)
-# alternatively you can do both steps using : getGEO("GSE5327",GSEMatrix=TRUE)
+# GET GSE SOFT FILE
+#GSE5327.file <- getGEOfile("GSE5327",destdir = getwd())
+GSE5327 <- getGEO(filename = "./GSE5327.soft.gz",GSEMatrix=TRUE)
+# GET GEO MATRIX FILE
+getGEO("GSE5327",GSEMatrix=TRUE)
 
 #sample names
 names(GSMList(GSE5327))
@@ -93,8 +107,23 @@ heatmap.2(heatmap.data,
           dendrogram = "col")
 
 #Anotation data
+GSE5327 <- getGEO(filename = "./GSE5327.soft.gz",GSEMatrix=FALSE)
+Phenotipic.data <- pData(GSE5327[[1]])
+Phenotipic.characteristics <- Phenotipic.data[,grep(x = colnames(Phenotipic.data), pattern = "characteristics")]
+Phenotipic.characteristics <- data.frame(lapply(Phenotipic.characteristics, as.character), stringsAsFactors=FALSE)
+#Fix colnames
+fix.col.names <- t(as.data.frame(strsplit(x = as.character(Phenotipic.characteristics[1,]),split = ":")))
+colnames(Phenotipic.characteristics) <- fix.col.names[,1]
+#Fix data
+for (i in 1:ncol(Phenotipic.characteristics)) {
+  x<-colnames(Phenotipic.characteristics[i])
+  x<- paste0(x,": ")
+  print (x)
+  x<-gsub(x=x ,pattern = "\\(",replacement = "\\\\(")
+  x<-gsub(x=x ,pattern = "\\)",replacement = "\\\\)")
+  Phenotipic.characteristics[,i] <- gsub(x = Phenotipic.characteristics[,i],pattern = x,replacement = "")
+}
 
-#test R git commit
 
 
 
