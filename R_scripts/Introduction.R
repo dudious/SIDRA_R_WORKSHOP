@@ -141,7 +141,8 @@ w3
 
 ##Task: Multiply the 10 in vector w3 with 2.
 
-
+w3[6]<-as.numeric(w3[6]) * 2
+w3
 ###############################################################################
 #Lists
 #A collection of objects
@@ -149,7 +150,7 @@ mylist <- list()
 mylist[["group"]] <- c("Control", "Treatment")
 mylist[["numbers"]] <- c(1:5, 51:55)
 mylist[["single"]] <- 19.57
-mylist
+
 
 #Another way to create a new list
 x <- list(IDs=c(1, 2, 3), names=c('Control', 'Treatment1', 'Treatment2'), study="My Study")
@@ -157,7 +158,7 @@ x
 names(x)
 
 ##Referencing elements of a list
-mylist[[2]] #2nd component of the list
+mylist[[2]][1] #2nd component of the list
 mylist[["numbers"]] #component named 'numbers' in list
 mylist$numbers #component named 'numbers' in list
 
@@ -184,6 +185,7 @@ s3[[2]][1]
 #Substring
 substr(s, 6, 9)
 
+s
 ##Find a substring using grep:
 grep("CD3+", s2, fixed=TRUE)
 s2[grep("CD3+", s2, fixed=TRUE)]
@@ -195,7 +197,7 @@ unique(s3) #on a list
 ##Pattern matching and replacement
 s <- c("CD3+_CD4+")
 s <- gsub("_", "/", s, fixed=TRUE)
-
+s
 ##Number of characters
 nchar(s)
 

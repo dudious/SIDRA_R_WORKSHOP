@@ -14,7 +14,17 @@ cmv = myData[3,]
 genes = as.matrix(scale(myData[5:8004,]))
 
 ### run cv.glmnet & plot results; default gaussian, deviance, 10-fold cv, alpha = 1
-fit1 <- cv.glmnet(x = t(genes), y = t(sex), family = 'binomial', type = 'class')
+t <- data.frame(repetition = numeric(),
+                Lambda = numeric()
+                )
+for (i in 1:20) {
+  fit1 <- cv.glmnet(x = t(genes), y = t(sex), family = 'binomial', type = 'class')
+  t[i,1]<- i
+  t[i,2]<- fit1$lambda.min
+}
+class(t$Lambda)
+summary (t$Lambda)
+
 plot(fit1)
 
 ### check object attributes
