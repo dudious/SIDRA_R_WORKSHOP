@@ -2,7 +2,7 @@
 library(glmnet)
 
 ### load data
-myData<-read.csv('EY2.csv', header = TRUE, row.names = 1)
+myData<-read.csv('./Data/EY2.csv', header = TRUE, row.names = 1)
 
 ### check first rows/columns & dimension
 myData[1:5,1:3]
@@ -10,6 +10,7 @@ dim(myData)
 
 ### create outcome variables (sex and cmv) and predictors (genes-standardize)
 sex = myData[2,]
+cmv = myData[3,]
 genes = as.matrix(scale(myData[5:8004,]))
 
 ### run cv.glmnet & plot results; default gaussian, deviance, 10-fold cv, alpha = 1
@@ -33,7 +34,7 @@ fit1$glmnet.fit$beta[which(fit1$glmnet.fit$beta[,20]!=0),20]
 fit1$glmnet.fit$beta[which(fit1$glmnet.fit$beta[,which(fit1$lambda==fit1$lambda.min)]!=0),which(fit1$lambda==fit1$lambda.min)]
 
 ### change alpha towards ridge
-fit2 <- cv.glmnet(x = t(genes), y = t(sex), family = 'binomial', type = 'class', alpha = 0.2)
+fit2 <- cv.glmnet(x = t(genes), y = t(sex), family = 'binomial', type = 'auc', alpha = 0.2,nfolds=3)
 plot(fit2)
 
 ### change nfolds
@@ -46,17 +47,18 @@ plot(fit4)
 
 ### Predict CMV positivity and change penaly factor
 ### alpha = 1 for first 100 features, alpha = 0.1 for all others 
-fit5 <- cv.glmnet(x = t(genes), y = t(cmv), family = 'binomial', type = 'class', nfold = 5, penalty.factor = c(rep(1, 100), rep(0.1, 7900)))
+fit5 <- cv.glmnet(x = t(genes), y = t(cmv), family = 'binomial', type = 'class', nfold = 5,
+                  penalty.factor = c(rep(1, 100), rep(0.1, 7900)))
 plot(fit5)
 
 ### RUN regression and get signifcance of betas by FDR
 ### load functions
-source('regressNPermute.R')
-source('estimateFDRbyPerm.R')
-source('utility_fxns.R')
+source('./R_scripts/regressNPermute.R')
+source('./R_scripts/estimateFDRbyPerm.R')
+source('./R_scripts/utility_fxns.R')
 
 ### load the neu data file
-neuData<-read.csv('gabNeut.csv', header = TRUE, row.names = 1)
+neuData<-read.csv('./Data/gabNeut.csv', header = TRUE, row.names = 1)
 
 ### create outcome variables (ys) and predictors (xs)
 xNeu <- neuData[1:2,]
