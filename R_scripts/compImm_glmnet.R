@@ -80,8 +80,9 @@ fit_reg<-regressNPermuteFast(t(xNeu), t(yNeu), numPerms = 500)
 ### compute q-values by analzying p-values estimated from permuted data
 fdr_fit_reg<-fdrByPerm(LMcoef=fit_reg$rndCoef,realPv=fit_reg$r$pv,thres=DefThes)
 
-### observe p-values from the regression 
+### observe p-values from the regression , select the very  significant ones 
 fit_reg$r$pv
+fit_reg$r$pv[fit_reg$r$pv[,3]<0.005,]
 
 ### observe q-values from the permutation procedure
 fdr_fit_reg$q

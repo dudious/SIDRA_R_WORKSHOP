@@ -21,7 +21,7 @@
 
 # Setup environment
 rm(list=ls())
-setwd("~/Dropbox/R course/WD/")
+setwd("~/Dropbox/R course/SIDRA_R_WORKSHOP/")
 ## install the dependencies (required packages)
 ### CRAN
 required.packages <- c("gplots")
@@ -37,27 +37,27 @@ lapply(required.packages, library, character.only = TRUE)
 lapply(required.biocLite.packages, library, character.only = TRUE)
 
 # Download the GEO file and load in R
-# GET GSE SOFT FILE
-#GSE5327.file <- getGEOfile("GSE5327",destdir = getwd())
-GSE5327 <- getGEO(filename = "./GSE5327.soft.gz",GSEMatrix=TRUE)
-# GET GEO MATRIX FILE
-getGEO("GSE5327",GSEMatrix=TRUE)
+# GET GSE SOFT FILE ONLY
+GSE5327.file <- getGEOfile("GSE5327",destdir = "./Data",GSEMatrix=FALSE)
+# GET GSE SOFT and MATRIX and save to specific location
+GSE.Soft <- getGEO("GSE5327",GSEMatrix=FALSE,destdir = "./Data")
+GSE.ExpressionSet <- getGEO("GSE5327",GSEMatrix=TRUE,destdir = "./Data")
 
 #sample names
-names(GSMList(GSE5327))
+names(GSMList(GSE.Soft))
 #platforms used in this GSE
-names(GPLList(GSE5327))
-GSM.platforms <- lapply(GSMList(GSE5327),function(x) {Meta(x)$platform}) 
+names(GPLList(GSE.Soft))
+GSM.platforms <- lapply(GSMList(GSE.Soft),function(x) {Meta(x)$platform}) 
 data.frame(GSM.platforms)
 
 #example of an GSM experession vector 
-Table(GSMList(GSE5327)[[1]])[1:100,]
+Table(GSMList(GSE.Soft)[[1]])[1:100,]
 #example of gene anotation data from GPL of GSM 1
-Probe.anotaion.table <- Table(GPLList(GSE5327)[[1]])[,c(1,2,4,11,12,10)]
+Probe.anotaion.table <- Table(GPLList(GSE.Soft)[[1]])[,c(1,2,4,11,12,10)]
 #Probeset extrated from GPL of GSM 1 
 probesets <- as.character(Probe.anotaion.table$ID)
 #creating the expression matrix ordered by the GPL order of probes
-data.matrix <- do.call('cbind',lapply(GSMList(GSE5327),function(x) {
+data.matrix <- do.call('cbind',lapply(GSMList(GSE.Soft),function(x) {
   tab <- Table(x)
   mymatch <- match(probesets,tab$ID_REF)
   return(tab$VALUE[mymatch])
@@ -107,8 +107,7 @@ heatmap.2(heatmap.data,
           dendrogram = "col")
 
 #Anotation data
-GSE5327 <- getGEO(filename = "./GSE5327.soft.gz",GSEMatrix=FALSE)
-Phenotipic.data <- pData(GSE5327[[1]])
+Phenotipic.data <- pData(GSE.ExpressionSet[[1]])
 Phenotipic.characteristics <- Phenotipic.data[,grep(x = colnames(Phenotipic.data), pattern = "characteristics")]
 Phenotipic.characteristics <- data.frame(lapply(Phenotipic.characteristics, as.character), stringsAsFactors=FALSE)
 #Fix colnames
